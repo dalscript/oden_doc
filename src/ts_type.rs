@@ -217,9 +217,20 @@ pub fn ts_entity_name_to_name(
     Ident(ident) => ident.sym.to_string(),
     TsQualifiedName(ts_qualified_name) => {
       let left = ts_entity_name_to_name(&ts_qualified_name.left);
-      let right = ts_qualified_name.right.sym.to_string();
+      let right = ts_member_name_to_name(&ts_qualified_name.right);
       format!("{}.{}", left, right)
     }
+  }
+}
+
+pub fn ts_member_name_to_name(
+  member_name: &deno_ast::swc::ast::TsMemberName,
+) -> String {
+  use deno_ast::swc::ast::TsMemberName::*;
+
+  match member_name {
+    Ident(ident) => ident.sym.to_string(),
+    PrivateName(private_name) => private_name.id.sym.to_string(),
   }
 }
 
